@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class ServerUtil {
     public interface JsonResponseHandler {
         void onResponse(JSONObject json);
     }
-    public static void postRequestLogin(Context context, String email, String pw, JsonResponseHandler handler) {
+    public static void postRequestLogin(Context context, String email, String pw, final JsonResponseHandler handler) {
 
          OkHttpClient client = new OkHttpClient();
 
@@ -51,6 +52,17 @@ public class ServerUtil {
                 String body = response.body().string();
 
                 Log.d("서버 연결 성공", body);
+
+                try {
+                    JSONObject jsonObject = new JSONObject(body);
+
+                    if (handler != null) {
+                        handler.onResponse(jsonObject);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
 
