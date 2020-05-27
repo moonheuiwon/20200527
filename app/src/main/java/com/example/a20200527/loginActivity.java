@@ -10,6 +10,7 @@ import com.example.a20200527.databinding.ActivityLoginBinding;
 import com.example.a20200527.databinding.ActivityLoginBinding ;
 import com.example.a20200527.utils.ServerUtil;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class loginActivity extends BaseActivity {
@@ -39,6 +40,18 @@ public class loginActivity extends BaseActivity {
                     public void onResponse(JSONObject json) {
 
                         Log.d("JSON확인", json.toString());
+
+                        try {
+                            int code = json.getInt("code");
+                            if (code == 200) {
+                                Log.d("분석결과", "로그인 성공");
+                            }
+                            else  {
+                                Log.d("분석결과", " 로그인 실패");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
                     }
                 });
