@@ -22,6 +22,7 @@ public class SignUPActivity extends BaseActivity {
     ActivitySignUPBinding binding;
 
     boolean idCheckOk = false;
+    boolean nickNameCheckOk = false;
 
 //    응용 문제
 //    비번은 타이핑 할 때마다 길이 검사
@@ -45,6 +46,26 @@ public class SignUPActivity extends BaseActivity {
     @Override
     public void setupEvents() {
 
+        binding.nickNameEdt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                nickNameCheckOk = false;
+                binding.nickNameCheckResultTxt.setText("중복검사를 해주세요.");
+
+                checkSignUpEnable();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
 //        응용문제
 //        닉네임 중복확인 버튼 => 서버에 중복확인 요청 (문서 참조)
 //        => 성공일 경우 "사용해도 좋습니다." 토스트
@@ -62,7 +83,6 @@ public class SignUPActivity extends BaseActivity {
 //                email을 변경하면 무조건 중복검사를 실패로 변경 => 제검사 요구
                 idCheckOk = false;
                 binding.idCheckResultTxt.setText("중복 검사를 진행해주세요.");
-                binding.nickNameCheckResultTxt.setText("중복 검사를 진행해주세요");
 
 //                버튼을 비활성화로 체크
                 checkSignUpEnable();
@@ -95,6 +115,7 @@ public class SignUPActivity extends BaseActivity {
                                     public void run() {
 
                                         binding.nickNameCheckResultTxt.setText("사용해도 좋은 닉네임입니다.");
+                                        nickNameCheckOk = true;
 
                                     }
                                 });
@@ -109,6 +130,14 @@ public class SignUPActivity extends BaseActivity {
                                     }
                                 });
                             }
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    checkSignUpEnable();
+                                }
+                            });
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -249,7 +278,7 @@ public class SignUPActivity extends BaseActivity {
 
 //        boolean isIdDupCheckOk = idCheckOk;
 
-        binding.signUpBtn.setEnabled(isAllPassWordOk && idCheckOk);
+        binding.signUpBtn.setEnabled(isAllPassWordOk && idCheckOk && nickNameCheckOk);
 
     }
 
