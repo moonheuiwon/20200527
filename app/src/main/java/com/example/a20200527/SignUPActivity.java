@@ -9,10 +9,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.a20200527.databinding.ActivitySignUPBinding;
 import com.example.a20200527.utils.ServerUtil;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SignUPActivity extends BaseActivity {
@@ -50,6 +52,33 @@ public class SignUPActivity extends BaseActivity {
                     @Override
                     public void onResponse(JSONObject json) {
                         Log.d("중복응답확인", json.toString());
+
+                        try {
+                            int code = json.getInt("code");
+
+                            if (code == 200) {
+//                                중복검사 통과
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(mContext, "사용해도 좋은 아이디입니다.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                            }
+                            else {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+//                                      중복 혹은 문제가있어서 통과가 안됨 Ex. 400으로 나옴 (404 - not found / 403 - 권한 없음)
+                                        Toast.makeText(mContext, "중복되는 아이디 입니다.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
             }
