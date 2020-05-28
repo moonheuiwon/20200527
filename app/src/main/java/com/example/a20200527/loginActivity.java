@@ -2,6 +2,7 @@ package com.example.a20200527;
 
 import androidx.databinding.DataBindingUtil;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.a20200527.databinding.ActivityLoginBinding;
 import com.example.a20200527.databinding.ActivityLoginBinding ;
+import com.example.a20200527.utils.ContextUtil;
 import com.example.a20200527.utils.ServerUtil;
 
 import org.json.JSONException;
@@ -58,6 +60,8 @@ public class loginActivity extends BaseActivity {
 
                                 JSONObject data = json.getJSONObject("data");
                                 String token = data.getString("token");
+
+                                ContextUtil.setLoginUserToken(mContext, token);
                             }
                             else  {
                                 Log.d("분석결과", " 로그인 실패");
