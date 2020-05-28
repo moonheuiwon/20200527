@@ -45,6 +45,11 @@ public class SignUPActivity extends BaseActivity {
     @Override
     public void setupEvents() {
 
+//        응용문제
+//        닉네임 중복확인 버튼 => 서버에 중복확인 요청 (문서 참조)
+//        => 성공일 경우 "사용해도 좋습니다." 토스트
+//        => 실패일경우 "중복된 닉네임입니다." 토스트
+
         binding.emailEdt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -57,6 +62,7 @@ public class SignUPActivity extends BaseActivity {
 //                email을 변경하면 무조건 중복검사를 실패로 변경 => 제검사 요구
                 idCheckOk = false;
                 binding.idCheckResultTxt.setText("중복 검사를 진행해주세요.");
+                binding.nickNameCheckResultTxt.setText("중복 검사를 진행해주세요");
 
 //                버튼을 비활성화로 체크
                 checkSignUpEnable();
@@ -68,6 +74,49 @@ public class SignUPActivity extends BaseActivity {
 
             }
         });
+
+
+        binding.nickNameCheckBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String inputNick = binding.nickNameEdt.getText().toString();
+
+                ServerUtil.getRequestDuplicatedCheck(mContext, inputNick, "NICKNAME", new ServerUtil.JsonResponseHandler() {
+                    @Override
+                    public void onResponse(JSONObject json) {
+                        Log.d("로그확인", json.toString());
+
+                        try {
+                            int code = json.getInt("code");
+
+                            if (code == 200) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        binding.nickNameCheckResultTxt.setText("사용해도 좋은 닉네임입니다.");
+
+                                    }
+                                });
+                            }
+                            else {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        binding.nickNameCheckResultTxt.setText("중복된 닉네임입니다.");
+
+                                    }
+                                });
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+
 
         binding.idCheckBtn.setOnClickListener(new View.OnClickListener() {
             @Override

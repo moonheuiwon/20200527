@@ -93,18 +93,29 @@
             android:layout_height="wrap_content">
 
             <EditText
+                android:id="@+id/nickNameEdt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="닉네임 입력(한글 가능)"
+                android:hint="닉네임을 입력하세요.(한글가능)"
                 android:inputType="textEmailAddress"/>
 
             <Button
+                android:id="@+id/nickNameCheckBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="중복확인"
                 android:layout_gravity="right"/>
 
+
         </FrameLayout>
+
+        <TextView
+            android:id="@+id/nickNameCheckResultTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="중복 검사를 해주세요."
+            android:textColor="#A0A0A0"/>
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -117,6 +128,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="회원가입"/>
+
 
     </LinearLayout>
 </layout>
