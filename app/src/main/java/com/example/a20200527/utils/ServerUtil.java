@@ -114,4 +114,47 @@ public class ServerUtil {
         });
 
     }
+    public static void putRequestSignUp(Context context, String email, String password, String nickName, final JsonResponseHandler handler) {
+
+        OkHttpClient client = new OkHttpClient();
+
+        final RequestBody requestBody = new FormBody.Builder()
+                .add("email", email)
+                .add("password", password)
+                .add("nick_name", nickName)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(BASE_URL+"/user")
+                .put(requestBody)
+//                .header() //  헤더가 필요하다면 이 시점에서 첨부.
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("서버연결실패","로그인 기능 실패");
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
+                String body = response.body().string();
+
+                Log.d("서버 연결 성공", body);
+
+                try {
+                    JSONObject jsonObject = new JSONObject(body);
+
+                    if (handler != null) {
+                        handler.onResponse(jsonObject);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+    }
 }
