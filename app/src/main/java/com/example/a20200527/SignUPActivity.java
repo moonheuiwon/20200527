@@ -21,6 +21,8 @@ public class SignUPActivity extends BaseActivity {
 
     ActivitySignUPBinding binding;
 
+    boolean idCheckOk = false;
+
 //    응용 문제
 //    비번은 타이핑 할 때마다 길이 검사
 //    => 0글자 : 비밀번호를 입력해주세요.
@@ -62,6 +64,9 @@ public class SignUPActivity extends BaseActivity {
                                     @Override
                                     public void run() {
                                         Toast.makeText(mContext, "사용해도 좋은 아이디입니다.", Toast.LENGTH_SHORT).show();
+                                        binding.idCheckResultTxt.setText("사용해도 좋은 아이디입니다.");
+
+                                        idCheckOk = true;
                                     }
                                 });
 
@@ -72,10 +77,19 @@ public class SignUPActivity extends BaseActivity {
                                     public void run() {
 //                                      중복 혹은 문제가있어서 통과가 안됨 Ex. 400으로 나옴 (404 - not found / 403 - 권한 없음)
                                         Toast.makeText(mContext, "중복되는 아이디 입니다.", Toast.LENGTH_SHORT).show();
+                                        binding.idCheckResultTxt.setText("중복되는 아이디 입니다.");
                                     }
                                 });
 
                             }
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    checkSignUpEnable();
+                                }
+                            });
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -160,9 +174,9 @@ public class SignUPActivity extends BaseActivity {
 
         boolean isAllPassWordOk = checkPasswords();
 
-        boolean isIdDupCheckOk = true;
+//        boolean isIdDupCheckOk = idCheckOk;
 
-        binding.signUpBtn.setEnabled(isAllPassWordOk && isIdDupCheckOk);
+        binding.signUpBtn.setEnabled(isAllPassWordOk && idCheckOk);
 
     }
 
